@@ -10,7 +10,7 @@ sub startup ($self) {
 
   # Load configuration from config file
   my $config = $self->plugin('NotYAMLConfig');
-
+  
   # Configure the application
   $self->secrets($config->{secrets});
 

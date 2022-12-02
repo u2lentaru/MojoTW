@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html> 
-<!-- <head><title><%= title %></title></head> -->
+<!-- <head><title><%= title %> </title></head> -->
   <head><title><Url list lauout></title></head>
   <!--<h3>Url list layout</h3>-->
   <body><%= content %></body>

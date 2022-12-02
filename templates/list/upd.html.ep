@@ -3,6 +3,6 @@
 <a href="/">Home</a>
 <form action="/upd" method="POST">
     <label for="nu">New url:</label><br>
-    <input type="text" id="nu" name="nu"><br>
+    <input type="text" id="nu" name="nu" value=<%=$urlname%>><br>
     <p><input type="submit" value="Изменить"/>       
 </form>
