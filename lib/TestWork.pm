@@ -45,6 +45,80 @@ sub startup ($self) {
 # Perform operation in 30 seconds
 # Mojo::IOLoop->timer(30 => sub ($self->redirect_to("/poll/"));
 
+# 1
+# use strict;
+# use warnings 'all';
+# use feature 'say';
+
+# use Mojo;
+
+# use constant URL => 'http://stackoverflow.com/questions/tagged/perl';
+
+# STDOUT->autoflush;
+
+# my $ua = Mojo::UserAgent->new;
+# my $delay = Mojo::IOLoop::Delay->new;
+
+# my @urls = ( URL ) x 10;
+
+# my @steps =  map {
+
+#     my $url = $_;
+
+#     sub {
+
+#         my $end = $delay->begin;
+
+#         $ua->get( $url => sub {
+#             my ( $ua, $txn ) = @_;
+
+#             $end->();
+
+#             if ( my $err = $txn->error ) {
+#                 say $err->message;
+#             }
+#             else {
+#                 my $res = $txn->success;
+#                 say "@{$res}{qw/ code message /}";
+#             }
+#         });
+#     }
+
+# } @urls;
+
+
+# $delay->steps( @steps, sub { say 'Done' } );
+
+# Mojo::IOLoop->start unless Mojo::IOLoop->is_running;
+
+
+
+
+
+
+
+# 2
+# #!/usr/bin/perl
+# use Mojo::Base -strict;
+
+# use Mojo::IOLoop;
+# use Mojo::UserAgent;
+
+# my $ua = Mojo::UserAgent->new;
+
+# Mojo::IOLoop->delay(sub {
+#   my $delay = shift;
+#   $ua->get('https://www.google.ru' => $delay->begin);
+# }, sub {
+#   my ($delay, $tx) = @_;
+#   $tx->res->body; # body of the google.ru
+#   $ua->get('https://twitter.com' => $delay->begin);
+# }, sub {
+#   my ($delay, $tx) = @_;
+#   $tx->res->body; # body of the twitter.com
+#   warn 'DONE';
+# })->wait;
+
 }
 
 1;
