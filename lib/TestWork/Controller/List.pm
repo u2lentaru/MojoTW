@@ -6,6 +6,8 @@ use Mojo::Pg;
 use LWP::Simple;
 use Mojo::UserAgent;
 use Data::Dumper;
+use Mojo::IOLoop::Delay;
+
 our $urlid = 0;
 our $urlname = "";
 
@@ -49,21 +51,30 @@ sub saveupd ($self) {
 }
 
 sub poll ($self) {
-  foreach my $rec (@{$self->pg->db->query('select url from url_list')->hashes->to_array}) {
-    my $ua  = Mojo::UserAgent->new;
-    my $url = $rec->{url};
-    say $url, "\n";
-    my $res = $ua->get($url)->res;
-    # say Dumper($res->content->headers);
-    # say Dumper($res->content->headers{headers});
-    say $res->dom->find('h3')->[7];
+  my $ua  = Mojo::UserAgent->new;
+  my $delay = Mojo::IOLoop::Delay->new;
 
-    # say $res->body;
-    # say my $h1 = $res->dom->find('head')->[0];
-    # if ($res->is_success)  { say $res->body } 
-    # if ($res->is_success)  
-    # { say $res->dom->find('title')->[0]};
-    # $ua->get('http://url.ru')->res->dom->find('h1')->[0];   
+  foreach my $rec (@{$self->pg->db->query('select id, url from url_list')->hashes->to_array}) {
+    my $uaurl = $rec->{url};
+    my $uaurlid = $rec->{id};
+
+    my $end = $delay->begin;
+
+    $ua->get( $uaurl => sub {
+
+      my ( $ua, $txn ) = @_;
+            $end->();
+
+      if ( my $err = $txn->error ) {
+          say $err->message;
+      }
+      else {
+        my $res = $txn->success;
+        say "@{$res}{qw/ code message /}";
+      }
+
+    });    
+
   };    
     $self->redirect_to("/"); 
 }

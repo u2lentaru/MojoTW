@@ -119,6 +119,31 @@ sub startup ($self) {
 #   warn 'DONE';
 # })->wait;
 
+################Mojo::Server::Daemon#######################
+
+# use Mojo::UserAgent;
+# use Mojo::Server::Daemon;
+
+# my $ua = Mojo::UserAgent->new;
+# my $daemon = Mojo::Server::Daemon->new(
+#   listen => ['https://*:443']
+# )->unsubscribe('request');
+# $daemon->on(request => sub {
+#   my ($daemon, $tx) = @_;
+
+#   my $req = $tx->req->clone;
+#   $req->url->scheme("https")->host("10.3.199.40");
+
+#   $ua->start(Mojo::Transaction::HTTP->new(req => $req) => sub {
+#     my ($ua, $proxy_tx) = @_;
+#     $tx->res($proxy_tx->res)->resume;
+#   });
+# });
+# $daemon->run;
+ 
+
+#######################################
+
 }
 
 1;
@@ -136,3 +161,18 @@ CREATE TABLE IF NOT EXISTS public.url_list (
   httphead3 text,
 	CONSTRAINT url_list_pk PRIMARY KEY (id)
 );
+
+# Тестовое задание для бэкенд разработчика.
+
+# Реализовать CRUD проект проверки доступности веб ресурсов,
+# используя: postgres, docker compose, git, perl, DBI::Pg, Mojo::Base 'Mojolicious', Mojo::UserAgent.
+
+# Проект должен лежать в git репозитории и подниматься с помощью команды docker-compose up.
+
+# Проект должен состоять из двух сервисов: http server для CRUD и daemon для запросов к веб ресурсам.
+
+# HTTP Server по индексу должен показывать таблицу со следующими полями:
+# url веб ресурса, дата получения, http status, три первых http заголовка.
+
+# Перепроверка доступности всех веб ресурсов должна осуществляться каждые 5 минут,
+# при добавление нового веб ресурса, получение статуса его доступности должно быть произведено сразу же.
