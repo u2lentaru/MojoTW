@@ -60,6 +60,7 @@ sub poll ($self) {
 
     my $end = $delay->begin;
 
+    say $uaurl;
     $ua->get( $uaurl => sub {
 
       my ( $ua, $txn ) = @_;
@@ -76,6 +77,10 @@ sub poll ($self) {
     });    
 
   };    
+  
+  $delay->steps((@{$self->pg->db->query('select url from url_list')->hashes->to_array}) , sub { say 'Done' } );
+  Mojo::IOLoop->start unless Mojo::IOLoop->is_running;
+
     $self->redirect_to("/"); 
 }
 
