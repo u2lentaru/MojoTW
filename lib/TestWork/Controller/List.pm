@@ -7,6 +7,7 @@ use LWP::Simple;
 use Mojo::UserAgent;
 use Data::Dumper;
 use Mojo::IOLoop::Delay;
+use Mojo::Transaction;
 
 our $urlid = 0;
 our $urlname = "";
@@ -27,7 +28,17 @@ sub showadd ($self) {
 
 sub saveadd ($self) {
     my $newurl = $self->param('nu');
-    $self->pg->db->query('insert into url_list (url, urldate, httpstatus, httphead1, httphead2, httphead3) values (?, null, null, null, null, null)', $newurl);
+    my $ts = localtime(time);
+    
+    my $ua  = Mojo::UserAgent->new;
+    my $res = $ua->get($newurl)->result;
+
+    my $hst = $res->{code}." ".$res->{message};
+    my $hhl = $res->headers->location;
+    my $hhc =  $res->headers->content_type;
+    my $hhs =  $res->headers->server;
+
+    $self->pg->db->query('insert into url_list (url, urldate, httpstatus, httphead1, httphead2, httphead3) values (?, ?, ?, ?, ?, ?)', $newurl, $ts, $hst, $hhl, $hhc, $hhs);
     $self->redirect_to("/");   
 }
 
@@ -46,7 +57,28 @@ sub showupd ($self) {
 sub saveupd ($self) {
     my $id = $urlid;
     my $newurl = $self->param('nu');
-    $self->pg->db->query('update url_list set url = ? where id = ?', $newurl, $id);
+    my $ts = localtime(time);
+    
+    my $ua  = Mojo::UserAgent->new;
+    my $res_ora = $ua->get($newurl);
+    my ($hst, $hhl, $hhc, $hhs) = (" ", " ", " ", " ");
+
+    # say "original_remote_address ",($res_ora->original_remote_address);
+    if (defined ($res_ora->original_remote_address)) {
+      my $res = $ua->get($newurl)->result;
+      $hst = $res->{code}." ".$res->{message};
+      $hhl = $res->headers->location;
+      $hhc =  $res->headers->content_type;
+      $hhs =  $res->headers->server;
+    }
+    else {
+      $hst = "Error";
+      $hhl = "Error";
+      $hhc = "Error";
+      $hhs = "Error";
+    };
+
+    $self->pg->db->query('update url_list set (url, urldate, httpstatus, httphead1, httphead2, httphead3) = (?,?,?,?,?,?) where id = ?', $newurl, $ts, $hst, $hhl, $hhc, $hhs, $id);
     $self->redirect_to("/");
 }
 
@@ -60,9 +92,9 @@ sub poll ($self) {
     # say "uaurlid ", $uaurlid, "\n";
 
     my $res = $ua->get($uaurl)->result;
-    say $res->{message};
-    say $res->{code};
-    # say "@{$res}{qw/ code message /}";
+    # say $res->{message};
+    # say $res->{code};
+    say "@{$res}{qw/ code message /}";
     # say $res->dom->at('title')->text;
     # say Dumper($res->headers);
     if ($res->headers->location){

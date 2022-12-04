@@ -3,7 +3,7 @@
 <%= link_to 'Poll' => '/poll' %>
 <table border="1">
 <caption>Список url</caption>
-<th>id</th><th>url</th><th>urldate</th><th>httpstatus</th><th>httphead1</th><th>httphead2</th><th>httphead3</th><th>Изменить</th><th>Удалить</th>
+<th>id</th><th>url</th><th>urldate</th><th>httpstatus</th><th>location</th><th>content_type</th><th>server</th><th>Изменить</th><th>Удалить</th>
 <%== "<tr><td>".$_->{id}."</td><td>".$_->{url}."</td><td>".$_->{urldate}."</td><td>".$_->{httpstatus}."</td><td>".$_->{httphead1}."</td><td>".$_->{httphead2}.
 "</td><td>".$_->{httphead3}."</td><td> <a href='/upd?id=".$_->{id}."&url=".$_->{url}."'>Изменить</a></td><td> <a href='/del?id=". $_->{id}."'>Удалить</a></td></tr>"
 for $self->pg->db->select('url_list')->hashes->each; %>
