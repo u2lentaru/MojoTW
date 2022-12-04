@@ -1,7 +1,7 @@
 % layout 'default';
 % title 'URL list';
-<table border="1">
 <%= link_to 'Poll' => '/poll' %>
+<table border="1">
 <caption>Список url</caption>
 <th>id</th><th>url</th><th>urldate</th><th>httpstatus</th><th>httphead1</th><th>httphead2</th><th>httphead3</th><th>Изменить</th><th>Удалить</th>
 <%== "<tr><td>".$_->{id}."</td><td>".$_->{url}."</td><td>".$_->{urldate}."</td><td>".$_->{httpstatus}."</td><td>".$_->{httphead1}."</td><td>".$_->{httphead2}.

@@ -1,5 +1,5 @@
 package TestWork::Controller::List;
-use warnings;
+# use warnings;
 use strict;
 use Mojo::Base 'Mojolicious::Controller', -signatures;
 use Mojo::Pg;
@@ -52,34 +52,27 @@ sub saveupd ($self) {
 
 sub poll ($self) {
   my $ua  = Mojo::UserAgent->new;
-  my $delay = Mojo::IOLoop::Delay->new;
-
+ 
   foreach my $rec (@{$self->pg->db->query('select id, url from url_list')->hashes->to_array}) {
     my $uaurl = $rec->{url};
+    say "uaurl ", $uaurl;
     my $uaurlid = $rec->{id};
+    # say "uaurlid ", $uaurlid, "\n";
 
-    my $end = $delay->begin;
-
-    say $uaurl;
-    $ua->get( $uaurl => sub {
-
-      my ( $ua, $txn ) = @_;
-            $end->();
-
-      if ( my $err = $txn->error ) {
-          say $err->message;
-      }
-      else {
-        my $res = $txn->success;
-        say "@{$res}{qw/ code message /}";
-      }
-
-    });    
-
+    my $res = $ua->get($uaurl)->result;
+    say $res->{message};
+    say $res->{code};
+    # say "@{$res}{qw/ code message /}";
+    # say $res->dom->at('title')->text;
+    # say Dumper($res->headers);
+    if ($res->headers->location){
+    say $res->headers->location;}
+    else {say ""};
+    say $res->headers->content_type;
+    say $res->headers->server;
+    # say $res->headers;
+  #  };
   };    
-  
-  $delay->steps((@{$self->pg->db->query('select url from url_list')->hashes->to_array}) , sub { say 'Done' } );
-  Mojo::IOLoop->start unless Mojo::IOLoop->is_running;
 
     $self->redirect_to("/"); 
 }
