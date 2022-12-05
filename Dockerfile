@@ -1,5 +1,6 @@
 FROM perl
-WORKDIR /opt/myapp
+RUN mkdir /opt/twapp
+WORKDIR /opt/twapp
 COPY . .
 RUN cpanm --installdeps -n .
 EXPOSE 3000

@@ -1,14 +1,19 @@
 #!/usr/bin/env perl
-use Mojolicious::Lite -signatures;
+use Mojolicious::Lite;
 use Mojo::UserAgent;
 use Mojo::Pg;
+use Time::timegm;
+use Test::Mock::Time;
 
+plugin Cron => (
+  '*/5 * * * *' => sub {
+    my $target_epoch = shift;
     helper pg => sub { state $pg = Mojo::Pg->new('postgres://postgres:postgres@localhost:5432/postgres') };
     # $self->helper(pg => sub { state $pg = Mojo::Pg->new('postgres://postgres:postgres@localhost:5432/postgres') });
     
     foreach my $rec (@{$pg->db->query('select id, url from url_list')->hashes->to_array}) {
       my $newurl = $rec->{url};
-      # say "uaurl ", $uaurl;
+      say "uaurl ", $uaurl;
       my $id = $rec->{id};
 
       my $ts = localtime(time);
@@ -33,8 +38,11 @@ use Mojo::Pg;
       };
         
     $pg->db->query('update url_list set (url, urldate, httpstatus, httphead1, httphead2, httphead3) = (?,?,?,?,?,?) where id = ?', $newurl, $ts, $hst, $hhl, $hhc, $hhs, $id);
+
     }
 
+  }
+);
 
 # for {
 #   say localtime(time);

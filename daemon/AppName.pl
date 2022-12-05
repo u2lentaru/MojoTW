@@ -3,12 +3,22 @@ use Mojolicious::Lite -signatures;
 use Mojo::UserAgent;
 use Mojo::Pg;
 
-    helper pg => sub { state $pg = Mojo::Pg->new('postgres://postgres:postgres@localhost:5432/postgres') };
-    # $self->helper(pg => sub { state $pg = Mojo::Pg->new('postgres://postgres:postgres@localhost:5432/postgres') });
+get '/' => sub ($c) {
+  $c->render(template => 'index');
+};
+
+my $ts = localtime(time);
+
+  # helper(pg => sub { state $pg = Mojo::Pg->new('postgres://postgres:postgres@localhost:5432/postgres') });
+  my $pg = Mojo::Pg->new('postgres://postgres:postgres@localhost:5432/postgres');
+  say $pg->db->query('select version() as version')->hash->{version};
+
+
+for (1) {
+    say $ts;
     
     foreach my $rec (@{$pg->db->query('select id, url from url_list')->hashes->to_array}) {
       my $newurl = $rec->{url};
-      # say "uaurl ", $uaurl;
       my $id = $rec->{id};
 
       my $ts = localtime(time);
@@ -32,18 +42,26 @@ use Mojo::Pg;
         $hhs = "Cannot resolve host";
       };
         
-    $pg->db->query('update url_list set (url, urldate, httpstatus, httphead1, httphead2, httphead3) = (?,?,?,?,?,?) where id = ?', $newurl, $ts, $hst, $hhl, $hhc, $hhs, $id);
-    }
+      $pg->db->query('update url_list set (url, urldate, httpstatus, httphead1, httphead2, httphead3) = (?,?,?,?,?,?) where id = ?', $newurl, $ts, $hst, $hhl, $hhc, $hhs, $id);
+    };
 
-
-# for {
-#   say localtime(time);
-#   sleep(10);
-# }
-
-get '/' => sub ($c) {
-  $c->render(template => 'index');
+    sleep(300);
 };
 
-# ./myapp.pl daemon -l http://*:8080
 app->start;
+
+__DATA__
+
+@@ index.html.ep
+% layout 'default';
+% title 'Welcome';
+<h1>Welcome to the Mojolicious real-time web framework!</h1>
+<%= localtime(time) %>
+
+@@ layouts/default.html.ep
+<!DOCTYPE html>
+<html>
+  <head><title><%= title %></title></head>
+  <body><%= content %></body>
+</html>
+
