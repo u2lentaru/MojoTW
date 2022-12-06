@@ -1,23 +1,30 @@
-#!/usr/bin/env perl
-use Mojolicious::Lite -signatures;
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Proc::Daemon;
 use Mojo::UserAgent;
 use Mojo::Pg;
 
-    helper pg => sub { state $pg = Mojo::Pg->new('postgres://postgres:postgres@localhost:5432/postgres') };
-    # $self->helper(pg => sub { state $pg = Mojo::Pg->new('postgres://postgres:postgres@localhost:5432/postgres') });
-    
+Proc::Daemon::Init;
+
+my $continue = 1;
+$SIG{TERM} = sub { $continue = 0 };
+
+my $pg = Mojo::Pg->new('postgres://postgres:postgres@localhost:5432/postgres');
+my $ua  = Mojo::UserAgent->new;
+
+while ($continue) {
+
     foreach my $rec (@{$pg->db->query('select id, url from url_list')->hashes->to_array}) {
       my $newurl = $rec->{url};
-      # say "uaurl ", $uaurl;
       my $id = $rec->{id};
 
       my $ts = localtime(time);
     
-      my $ua  = Mojo::UserAgent->new;
       my $res_ora = $ua->get($newurl);
       my ($hst, $hhl, $hhc, $hhs) = (" ", " ", " ", " ");
 
-      # say "original_remote_address ",($res_ora->original_remote_address);
       if (defined ($res_ora->original_remote_address)) {
         my $res = $ua->get($newurl)->result;
         $hst = $res->{code}." ".$res->{message};
@@ -32,18 +39,9 @@ use Mojo::Pg;
         $hhs = "Cannot resolve host";
       };
         
-    $pg->db->query('update url_list set (url, urldate, httpstatus, httphead1, httphead2, httphead3) = (?,?,?,?,?,?) where id = ?', $newurl, $ts, $hst, $hhl, $hhc, $hhs, $id);
-    }
+      $pg->db->query('update url_list set (url, urldate, httpstatus, httphead1, httphead2, httphead3) = (?,?,?,?,?,?) where id = ?', $newurl, $ts, $hst, $hhl, $hhc, $hhs, $id);
+    };
 
-
-# for {
-#   say localtime(time);
-#   sleep(10);
-# }
-
-get '/' => sub ($c) {
-  $c->render(template => 'index');
-};
-
-# ./myapp.pl daemon -l http://*:8080
-app->start;
+    sleep(300);
+    
+}
