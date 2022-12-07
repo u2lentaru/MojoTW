@@ -1,6 +1,6 @@
 version: '3'
 services:
-  web:
+  twapp:
     build:
       context: ..
       dockerfile: Dockerfile
@@ -14,3 +14,5 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
+    ports:
+     - "5432:5432"

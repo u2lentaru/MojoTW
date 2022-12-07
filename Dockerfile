@@ -16,4 +16,4 @@ RUN cpan -T Mojo::Pg
 RUN cpan -T Mojo::Base
 EXPOSE 3000
 ENTRYPOINT ["/bin/sh"]
-CMD ["./start_scr.sh"]
+CMD ["./start_script.sh"]
