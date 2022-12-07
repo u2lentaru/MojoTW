@@ -14,7 +14,7 @@ sub startup ($self) {
   # Configure the application
   $self->secrets($config->{secrets});
 
-  $self->helper(pg => sub { state $pg = Mojo::Pg->new('postgres://postgres:postgres@localhost:5432/postgres') });
+  $self->helper(pg => sub { state $pg = Mojo::Pg->new('postgres://postgres:postgres@host.docker.internal:5432/postgres') });
   
   $self->pg->db->query('CREATE TABLE IF NOT EXISTS public.url_list (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY,

@@ -1,6 +1,6 @@
 FROM ubuntu
-RUN mkdir /twapp
-WORKDIR /twapp
+RUN mkdir /twdaemon
+WORKDIR /twdaemon
 COPY . .
 RUN apt-get update
 RUN apt install
@@ -13,7 +13,4 @@ RUN apt-get install libpq-dev -y
 RUN cpan -T Proc::Daemon
 RUN cpan -T Mojo::UserAgent
 RUN cpan -T Mojo::Pg
-RUN cpan -T Mojo::Base
-EXPOSE 3000
-ENTRYPOINT ["/bin/sh"]
-CMD ["./start_scr.sh"]
+CMD perl twdaemon.pl
