@@ -1,8 +1,10 @@
-FROM ubuntu
+FROM ubuntu:latest
 RUN mkdir /twapp
 WORKDIR /twapp
 COPY . .
 RUN apt-get update
+RUN apt-get install -y gnupg2
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 871920D1991BC93C
 RUN apt install
 RUN apt install make
 RUN apt-get install libproc-daemon-perl -y
