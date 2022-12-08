@@ -21,10 +21,6 @@ sub saveadd ($self) {
     my $ts = localtime(time);
     
     my $ua  = Mojo::UserAgent->new;
-    my $ca = $ua->ca;
-    $ua = $ua->ca('/twapp/crt/ca.crt');
-    my $cert = $ua->cert;
-    $ua = $ua->cert('/twapp/crt/client.crt');
     my $res_ora = $ua->get($newurl);
     my ($hst, $hhl, $hhc, $hhs) = (" ", " ", " ", " ");
 
@@ -87,6 +83,10 @@ sub saveupd ($self) {
 
 sub poll ($self) {
   my $ua  = Mojo::UserAgent->new;
+  my $ca = $ua->ca;
+  $ua = $ua->ca('/twapp/crt/ca.crt');
+  my $cert = $ua->cert;
+  $ua = $ua->cert('/twapp/crt/client.crt');
  
     foreach my $rec (@{$self->pg->db->query('select id, url from url_list')->hashes->to_array}) {
       my $newurl = $rec->{url};
