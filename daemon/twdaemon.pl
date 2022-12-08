@@ -12,6 +12,18 @@ my $continue = 1;
 $SIG{TERM} = sub { $continue = 0 };
 
 my $pg = Mojo::Pg->new('postgres://postgres:postgres@'.$ENV{DB_HOST}.':5432/postgres');
+
+$pg->db->query('CREATE TABLE IF NOT EXISTS public.url_list (
+	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
+	url text NOT NULL,
+  urldate timestamp,
+  httpstatus text,
+  httphead1 text,
+  httphead2 text,
+  httphead3 text,
+	CONSTRAINT url_list_pk PRIMARY KEY (id)
+);');
+
 my $ua  = Mojo::UserAgent->new;
 
 while ($continue) {
