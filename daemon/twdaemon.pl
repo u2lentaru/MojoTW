@@ -11,7 +11,7 @@ Proc::Daemon::Init;
 my $continue = 1;
 $SIG{TERM} = sub { $continue = 0 };
 
-my $pg = Mojo::Pg->new('postgres://postgres:postgres@host.docker.internal:5432/postgres');
+my $pg = Mojo::Pg->new('postgres://postgres:postgres@'.$ENV{DB_HOST}.':5432/postgres');
 my $ua  = Mojo::UserAgent->new;
 
 while ($continue) {
