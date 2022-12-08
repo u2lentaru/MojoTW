@@ -1,0 +1,2 @@
+docker run -d -p 3000:3000 -e TW_DB_HOST=host.docker.internal -v \e\tmp:\wintmp --rm --name=twapp u2lru/twapp:20221207
+docker run -d -p 3000:3000 --privileged --name twappdind docker:dind
