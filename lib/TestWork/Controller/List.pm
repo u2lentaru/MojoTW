@@ -21,6 +21,10 @@ sub saveadd ($self) {
     my $ts = localtime(time);
     
     my $ua  = Mojo::UserAgent->new;
+    my $ca = $ua->ca;
+    $ua = $ua->ca('/twapp/crt/ca.crt');
+    my $cert = $ua->cert;
+    $ua = $ua->cert('/twapp/crt/client.crt');
     my $res_ora = $ua->get($newurl);
     my ($hst, $hhl, $hhc, $hhs) = (" ", " ", " ", " ");
 
