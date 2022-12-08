@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     container_name: twapp
     environment:
-      DB_HOST: db
+      TW_DB_HOST: db
     ports:
      - "3000:3000"
     depends_on:

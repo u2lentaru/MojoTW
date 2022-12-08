@@ -11,7 +11,7 @@ Proc::Daemon::Init;
 my $continue = 1;
 $SIG{TERM} = sub { $continue = 0 };
 
-my $pg = Mojo::Pg->new('postgres://postgres:postgres@'.$ENV{DB_HOST}.':5432/postgres');
+my $pg = Mojo::Pg->new('postgres://postgres:postgres@'.$ENV{TW_DB_HOST}.':5432/postgres');
 
 $pg->db->query('CREATE TABLE IF NOT EXISTS public.url_list (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
