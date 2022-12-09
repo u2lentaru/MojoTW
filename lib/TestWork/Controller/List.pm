@@ -21,11 +21,11 @@ sub saveadd ($self) {
     my $ts = localtime(time);
     
     my $ua  = Mojo::UserAgent->new;
-    my $res_ora = $ua->insecure(1)->get($newurl);
+    my $res_ora = $ua->get($newurl);
     my ($hst, $hhl, $hhc, $hhs) = (" ", " ", " ", " ");
 
     if (defined ($res_ora->original_remote_address)) {
-      my $res = $ua->insecure(1)->get($newurl)->result;
+      my $res = $ua->get($newurl)->result;
       $hst = $res->{code}." ".$res->{message};
       $hhl = $res->headers->location;
       $hhc =  $res->headers->content_type;
@@ -60,11 +60,11 @@ sub saveupd ($self) {
     my $ts = localtime(time);
     
     my $ua  = Mojo::UserAgent->new;
-    my $res_ora = $ua->insecure(1)->get($newurl);
+    my $res_ora = $ua->get($newurl);
     my ($hst, $hhl, $hhc, $hhs) = (" ", " ", " ", " ");
 
     if (defined ($res_ora->original_remote_address)) {
-      my $res = $ua->insecure(1)->get($newurl)->result;
+      my $res = $ua->get($newurl)->result;
       $hst = $res->{code}." ".$res->{message};
       $hhl = $res->headers->location;
       $hhc =  $res->headers->content_type;
@@ -83,10 +83,6 @@ sub saveupd ($self) {
 
 sub poll ($self) {
   my $ua  = Mojo::UserAgent->new;
-  # my $ca = $ua->ca;
-  # $ua = $ua->ca('/twapp/crt/ca.crt');
-  # my $cert = $ua->cert;
-  # $ua = $ua->cert('/twapp/crt/client.crt');
  
     foreach my $rec (@{$self->pg->db->query('select id, url from url_list')->hashes->to_array}) {
       my $newurl = $rec->{url};
@@ -94,11 +90,11 @@ sub poll ($self) {
 
       my $ts = localtime(time);
     
-      my $res_ora = $ua->insecure(1)->get($newurl);
+      my $res_ora = $ua->get($newurl);
       my ($hst, $hhl, $hhc, $hhs) = (" ", " ", " ", " ");
 
       if (defined ($res_ora->original_remote_address)) {
-        my $res = $ua->insecure(1)->get($newurl)->result;
+        my $res = $ua->get($newurl)->result;
         $hst = $res->{code}." ".$res->{message};
         $hhl = $res->headers->location;
         $hhc =  $res->headers->content_type;

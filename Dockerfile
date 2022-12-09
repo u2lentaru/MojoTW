@@ -12,7 +12,9 @@ RUN apt-get install libconfig-simple-perl
 RUN apt-get install libdbi-perl
 RUN apt-get install libdbd-pg-perl -y
 RUN apt-get install libpq-dev -y
+RUN apt-get install libio-socket-ssl-perl -y
 RUN cpan -T Proc::Daemon
+RUN cpan -T IO::Socket::SSL
 RUN cpan -T Mojo::UserAgent
 RUN cpan -T Mojo::Pg
 RUN cpan -T Mojo::Base
