@@ -24,8 +24,8 @@ sub saveadd ($self) {
     my $res_ora = $ua->insecure(1)->get($newurl);
     my ($hst, $hhl, $hhc, $hhs) = (" ", " ", " ", " ");
 
-    if (defined ($res_ora->insecure(1)->original_remote_address)) {
-      my $res = $ua->get($newurl)->result;
+    if (defined ($res_ora->original_remote_address)) {
+      my $res = $ua->insecure(1)->get($newurl)->result;
       $hst = $res->{code}." ".$res->{message};
       $hhl = $res->headers->location;
       $hhc =  $res->headers->content_type;
