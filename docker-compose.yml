@@ -7,6 +7,7 @@ services:
     container_name: twapp
     environment:
       TW_DB_HOST: db
+      MOJO_INSECURE: true
     ports:
      - "3000:3000"
     depends_on:
