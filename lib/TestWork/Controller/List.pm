@@ -94,7 +94,7 @@ sub poll ($self) {
 
       my $ts = localtime(time);
     
-      my $res_ora = $ua->get($newurl);
+      my $res_ora = $ua->insecure(1)->get($newurl);
       my ($hst, $hhl, $hhc, $hhs) = (" ", " ", " ", " ");
 
       if (defined ($res_ora->original_remote_address)) {
