@@ -3,6 +3,8 @@
 Проект состоит из двух сервисов: http server для CRUD и daemon для запросов к веб ресурсам.
 Перепроверка доступности всех веб ресурсов осуществляется каждые 5 минут, при добавление или изменении веб ресурса, производится получение статуса его доступности.
 
-git clone <https://github.com/u2lentaru/MojoTW>
-docker-compose up
-<http://localhost:3000>
+1. git clone <https://github.com/u2lentaru/MojoTW>
+
+2. docker-compose up
+
+3. <http://localhost:3000>
